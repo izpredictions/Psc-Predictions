@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - PCS PRÉDICTIONS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🎯 PCS PRÉDICTIONS</h1>
+
+  <div id="auth">
+    <h2>📝 INSCRIPTION</h2>
+    <input id="re" type="email" placeholder="Email">
+    <input id="rp" type="password" placeholder="Mot de passe (8 caractères min)">
+    <input id="rc" type="password" placeholder="Confirmer mot de passe">
+    <button onclick="register()">S'inscrire</button>
+    <p id="rm" class="msg"></p>
+
+    <hr style="margin: 40px auto; max-width: 350px;">
+
+    <h2>🔑 CONNEXION</h2>
+    <input id="le" type="email" placeholder="Email">
+    <input id="lp" type="password" placeholder="Mot de passe">
+    <button onclick="login()">Se connecter</button>
+    <p id="lm" class="msg"></p>
+
+    <a class="back-btn" href="index.html">← Retour</a>
+  </div>
+
+  <div id="welcome" style="display:none;">
+    <h2 id="wtext"></h2>
+    <p id="vipStatus"></p>
+
+    <div class="container">
+      <a class="box" href="gratuit.html">🆓 GRATUIT</a>
+      <a class="box" href="vip.html">👑 VIP</a>
+      <a class="box" href="montante.html">📈 MONTANTE</a>
+    </div>
+
+    <div style="margin-top: 30px;">
+      <button onclick="logout()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <script>
+    const re = document.getElementById('re');
+    const rp = document.getElementById('rp');
+    const rc = document.getElementById('rc');
+    const rm = document.getElementById('rm');
+    const le = document.getElementById('le');
+    const lp = document.getElementById('lp');
+    const lm = document.getElementById('lm');
+    const auth = document.getElementById('auth');
+    const welcome = document.getElementById('welcome');
+    const wtext = document.getElementById('wtext');
+    const vipStatus = document.getElementById('vipStatus');
+
+    function register() {
+      rm.className = 'msg';
+      if (!re.value.includes('@')) {
+        rm.innerText = "Email invalide";
+        return;
+      }
+      if (rp.value.length < 8) {
+        rm.innerText = "Mot de passe trop court (8 caractères min)";
+        return;
+      }
+      if (rp.value !== rc.value) {
+        rm.innerText = "Les mots de passe ne correspondent pas";
+        return;
+      }
+      localStorage.setItem("pcs_user", JSON.stringify({
+        email: re.value,
+        pass: rp.value,
+        vip: false,
+        vipExpiry: null
+      }));
+      rm.className = 'msg success';
+      rm.innerText = "✅ Inscription réussie ! Vous pouvez vous connecter.";
+      re.value = '';
+      rp.value = '';
+      rc.value = '';
+    }
+
+    function login() {
+      lm.className = 'msg';
+      const u = JSON.parse(localStorage.getItem("pcs_user"));
+      if (!u || le.value !== u.email || lp.value !== u.pass) {
+        lm.innerText = "❌ Identifiants incorrects";
+        return;
+      }
+      localStorage.setItem("pcs_login", "ok");
+      show(u.email, u.vip);
+    }
+
+    function show(email, isVip) {
+      auth.style.display = "none";
+      welcome.style.display = "block";
+      wtext.innerText = "Bienvenue sur PCS PRÉDICTIONS, " + email + " 🎉";
+      if (isVip) {
+        vipStatus.innerHTML = '<span class="vip-badge">👑 MEMBRE VIP</span>';
+      } else {
+        vipStatus.innerHTML = '<span style="color:#666;">Compte Gratuit</span>';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("pcs_login");
+      location.reload();
+    }
+
+    // Auto-login si déjà connecté
+    if (localStorage.getItem("pcs_login") === "ok") {
+      const u = JSON.parse(localStorage.getItem("pcs_user"));
+      if (u) show(u.email, u.vip);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP - PCS PRÉDICTIONS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="noAccess">
+    <h1>👑 ACCÈS VIP REQUIS</h1>
+    <p>Cette section est réservée aux membres VIP.</p>
+    <p>Avantages VIP :</p>
+    <ul style="text-align: left; max-width: 400px; margin: 20px auto;">
+      <li>✅ Pronostics premium illimités</li>
+      <li>✅ Cotes sécurisées (1.30 - 1.80)</li>
+      <li>✅ Analyses détaillées</li>
+      <li>✅ Support prioritaire</li>
+      <li>✅ Taux de réussite > 85%</li>
+    </ul>
+
+    <p><strong>Abonnement VIP : 10 jours</strong></p>
+
+    <a class="whatsapp-btn" href="https://wa.me/VOTRENUMÉRO?text=Bonjour, je souhaite activer l'accès VIP PCS PRÉDICTIONS" target="_blank">
+      📱 Contacter via WhatsApp
+    </a>
+
+    <br>
+    <a class="back-btn" href="auth.html">← Retour au menu</a>
+  </div>
+
+  <div id="vipContent" style="display: none;">
+    <h1>👑 VIP PCS PRÉDICTIONS</h1>
+    <p class="vip-badge">MEMBRE VIP ACTIF</p>
+    <p>Pronostics premium exclusifs</p>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Match</th>
+          <th>Compétition</th>
+          <th>Pronostic</th>
+          <th>Cote</th>
+          <th>Confiance</th>
+          <th>Résultat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Arsenal - Chelsea</td>
+          <td>Premier League</td>
+          <td>1 (Victoire Arsenal)</td>
+          <td>1.75</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td class="status-pending">⏳ En attente</td>
+        </tr>
+        <tr>
+          <td>Atletico - Sevilla</td>
+          <td>La Liga</td>
+          <td>-2.5 Buts</td>
+          <td>1.50</td>
+          <td>⭐⭐⭐⭐</td>
+          <td class="status-pending">⏳ En attente</td>
+        </tr>
+        <tr>
+          <td>Napoli - Roma</td>
+          <td>Serie A</td>
+          <td>1X</td>
+          <td>1.35</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td class="status-win">✅ Gagné</td>
+        </tr>
+        <tr>
+          <td>Leipzig - Leverkusen</td>
+          <td>Bundesliga</td>
+          <td>+1.5 Buts</td>
+          <td>1.40</td>
+          <td>⭐⭐⭐⭐</td>
+          <td class="status-win">✅ Gagné</td>
+        </tr>
+        <tr>
+          <td>Monaco - Lyon</td>
+          <td>Ligue 1</td>
+          <td>Les deux marquent</td>
+          <td>1.65</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td class="status-pending">⏳ En attente</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top: 30px; color: #666;">
+      <strong>Statistiques du mois :</strong> 42 pronostics • 37 gagnés • 88% de réussite
+    </p>
+
+    <a class="back-btn" href="auth.html">← Retour au menu</a>
+  </div>
+
+  <script>
+    const u = JSON.parse(localStorage.getItem("pcs_user"));
+    if (u && u.vip === true) {
+      document.getElementById('noAccess').style.display = 'none';
+      document.getElementById('vipContent').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

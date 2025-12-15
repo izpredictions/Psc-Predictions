@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - PCS PRÉDICTIONS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loginAdmin">
+    <h1>🔒 ADMIN PCS PRÉDICTIONS</h1>
+    <input id="adminUser" type="text" placeholder="Nom d'utilisateur">
+    <input id="adminPass" type="password" placeholder="Mot de passe">
+    <button onclick="adminLogin()">Connexion Admin</button>
+    <p id="adminMsg" class="msg"></p>
+  </div>
+
+  <div id="adminPanel" style="display: none;">
+    <h1>⚙️ PANNEAU ADMIN</h1>
+
+    <h2>👤 Gestion Utilisateurs</h2>
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 500px; margin: 20px auto;">
+      <h3>Activer VIP pour un utilisateur</h3>
+      <input id="vipEmail" type="email" placeholder="Email de l'utilisateur">
+      <button onclick="activateVip()">Activer VIP (10 jours)</button>
+      <p id="vipMsg" class="msg"></p>
+    </div>
+
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; max-width: 500px; margin: 20px auto;">
+      <h3>Désactiver VIP</h3>
+      <input id="removeVipEmail" type="email" placeholder="Email de l'utilisateur">
+      <button onclick="removeVip()">Désactiver VIP</button>
+      <p id="removeVipMsg" class="msg"></p>
+    </div>
+
+    <hr style="max-width: 500px; margin: 40px auto;">
+
+    <h2>📊 Statistiques</h2>
+    <div style="background: #e7f5e7; padding: 20px; border-radius: 10px; max-width: 500px; margin: 20px auto;">
+      <p id="statsInfo">Chargement...</p>
+    </div>
+
+    <button onclick="adminLogout()" style="background: #d00;">Déconnexion Admin</button>
+  </div>
+
+  <script>
+    // Identifiants admin (à modifier)
+    const ADMIN_USER = "iz-predictions4";
+    const ADMIN_PASS = "iz-predictions4";
+
+    function adminLogin() {
+      const user = document.getElementById('adminUser').value;
+      const pass = document.getElementById('adminPass').value;
+      const msg = document.getElementById('adminMsg');
+
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        localStorage.setItem("pcs_admin", "ok");
+        showAdminPanel();
+      } else {
+        msg.innerText = "❌ Identifiants incorrects";
+      }
+    }
+
+    function showAdminPanel() {
+      document.getElementById('loginAdmin').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      updateStats();
+    }
+
+    function activateVip() {
+      const email = document.getElementById('vipEmail').value;
+      const msg = document.getElementById('vipMsg');
+      const u = JSON.parse(localStorage.getItem("pcs_user"));
+
+      if (!u) {
+        msg.innerText = "❌ Aucun utilisateur trouvé";
+        return;
+      }
+
+      if (u.email === email) {
+        u.vip = true;
+        u.vipExpiry = Date.now() + (10 * 24 * 60 * 60 * 1000); // 10 jours
+        localStorage.setItem("pcs_user", JSON.stringify(u));
+        msg.className = 'msg success';
+        msg.innerText = "✅ VIP activé pour " + email;
+      } else {
+        msg.innerText = "❌ Email non trouvé";
+      }
+    }
+
+    function removeVip() {
+      const email = document.getElementById('removeVipEmail').value;
+      const msg = document.getElementById('removeVipMsg');
+      const u = JSON.parse(localStorage.getItem("pcs_user"));
+
+      if (u && u.email === email) {
+        u.vip = false;
+        u.vipExpiry = null;
+        localStorage.setItem("pcs_user", JSON.stringify(u));
+        msg.className = 'msg success';
+        msg.innerText = "✅ VIP désactivé pour " + email;
+      } else {
+        msg.innerText = "❌ Email non trouvé";
+      }
+    }
+
+    function updateStats() {
+      const u = JSON.parse(localStorage.getItem("pcs_user"));
+      let statsHtml = "<strong>Utilisateurs enregistrés :</strong><br>";
+      if (u) {
+        statsHtml += "• " + u.email + (u.vip ? " 👑 VIP" : " (Gratuit)") + "<br>";
+      } else {
+        statsHtml += "Aucun utilisateur<br>";
+      }
+      document.getElementById('statsInfo').innerHTML = statsHtml;
+    }
+
+    function adminLogout() {
+      localStorage.removeItem("pcs_admin");
+      location.reload();
+    }
+
+    // Auto-login admin
+    if (localStorage.getItem("pcs_admin") === "ok") {
+      showAdminPanel();
+    }
+  </script>
+
+</body>
+</html>
